@@ -11,14 +11,21 @@ const memeRoutes = require('./routes/memeRoute');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// ------------------ CORS ------------------
+// Allow frontend origin and credentials
+const corsOptions = {
+    origin: 'http://localhost:5173', // your frontend URL
+    credentials: true,               // allow cookies, auth headers
+};
+app.use(cors(corsOptions));
+
+// ------------------ Middleware ------------------
 app.use(express.json());
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
-// Routes
+// ------------------ Routes ------------------
 app.use('/api/users', userRoutes);
 app.use('/api/memes', memeRoutes);
 
@@ -26,7 +33,7 @@ app.get('/', (req, res) => {
     res.send('MemeHub API is running');
 });
 
-// Create necessary upload directories
+// ------------------ Create upload directories ------------------
 const uploadDirs = ['images', 'videos', 'gifs'].map(dir => 
     path.join(__dirname, 'public/uploads', dir)
 );
@@ -37,7 +44,7 @@ uploadDirs.forEach(dir => {
     }
 });
 
-// Initialize database tables
+// ------------------ Initialize database tables ------------------
 const User = require('./model/userModel');
 const Meme = require('./model/memeModel');
 
@@ -52,7 +59,7 @@ const initializeDatabase = async () => {
     }
 };
 
-// Start server
+// ------------------ Start server ------------------
 initializeDatabase().then(() => {
     app.listen(port, () => {
         console.log(`Server is running on port: http://localhost:${port}`);

@@ -1,31 +1,104 @@
 import axios from "axios";
 
-// Base axios instance
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/users",
+  baseURL: "http://localhost:5000/api/users", // backend base route
   withCredentials: true,
 });
 
-// Signup
-export const signup = async (userData) => {
-  const res = await API.post("/signup", userData);
-  return res.data;
+// ---------------- AUTH ---------------- //
+export const signup = async (data) => {
+  try {
+    const res = await API.post("/register", data); // backend expects /register
+    if (res.data.success && res.data.user && res.data.token) {
+      localStorage.setItem("meme_user", JSON.stringify(res.data.user));
+      localStorage.setItem("auth_token", res.data.token);
+    }
+    return res.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Signup failed",
+    };
+  }
 };
 
-// Login
-export const login = async (credentials) => {
-  const res = await API.post("/login", credentials);
-  return res.data;
+export const login = async (data) => {
+  try {
+    const res = await API.post("/login", data);
+    if (res.data.success && res.data.user && res.data.token) {
+      localStorage.setItem("meme_user", JSON.stringify(res.data.user));
+      localStorage.setItem("auth_token", res.data.token);
+    }
+    return res.data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.response?.data?.message || "Login failed",
+    };
+  }
 };
 
-// Logout
 export const logout = async () => {
-  const res = await API.post("/logout");
-  return res.data;
+  localStorage.removeItem("meme_user");
+  localStorage.removeItem("auth_token");
+  return { success: true };
 };
 
-// Get current user (profile)
-export const getProfile = async () => {
-  const res = await API.get("/profile");
-  return res.data;
+// ---------------- AUTH CHECK ---------------- //
+// Fake checkAuthStatus since backend has no /verify route
+export const checkAuthStatus = async () => {
+  try {
+    const token = localStorage.getItem("auth_token");
+    const user = JSON.parse(localStorage.getItem("meme_user"));
+    if (token && user) {
+      return { success: true, user };
+    }
+    return { success: false, message: "Not authenticated" };
+  } catch (error) {
+    return { success: false, message: "Auth check failed" };
+  }
+};
+
+// ---------------- USER ---------------- //
+export const getAllUsers = async () => {
+  try {
+    const res = await API.get("/");
+    return res.data;
+  } catch (error) {
+    return { success: false, message: "Failed to fetch users" };
+  }
+};
+
+export const getUserById = async (userId) => {
+  try {
+    const res = await API.get(`/${userId}`);
+    return res.data;
+  } catch (error) {
+    return { success: false, message: "Failed to fetch user" };
+  }
+};
+
+// ---------------- FOLLOW ---------------- //
+export const followUser = async (userId) => {
+  try {
+    const token = localStorage.getItem("auth_token");
+    const res = await API.post(`/follow/${userId}`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    return { success: false, message: "Failed to follow user" };
+  }
+};
+
+export const unfollowUser = async (userId) => {
+  try {
+    const token = localStorage.getItem("auth_token");
+    const res = await API.delete(`/unfollow/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    return { success: false, message: "Failed to unfollow user" };
+  }
 };

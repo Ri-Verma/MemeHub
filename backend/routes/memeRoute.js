@@ -30,8 +30,9 @@ const upload = multer({ storage: storage });
 
 // Public routes
 router.get('/', memeController.getAllMemes);
-router.get('/:memeId', memeController.getMemeById);
 router.get('/category/:category', memeController.getMemesByCategory);
+router.get('/:memeId', memeController.getMemeById);
+
 
 // Protected routes
 router.post('/upload', authMiddleware, upload.single('meme'), memeController.uploadMeme);

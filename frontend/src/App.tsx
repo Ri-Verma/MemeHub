@@ -4,6 +4,8 @@ import Home from './pages/home';
 import Categories from './pages/categories';
 import AuthPage from './pages/profile';
 import './App.css';
+import MemeUpload from './pages/upload';
+import Explore from './pages/explore';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/category" element={<Categories />} />
           <Route path="/profile" element={<AuthPage />} />
+          <Route path="/upload" element={<MemeUpload />} />
+          <Route path="/explore" element={<Explore />} />
         </Routes>
       </div>
     </Router>

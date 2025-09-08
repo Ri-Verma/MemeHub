@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface Category {
   id: number;
@@ -44,12 +45,13 @@ const transitionDuration = 0.8;
 
 const CategorySlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
   // Auto slide
   useEffect(() => {
     const interval = setInterval(() => {
       goToNext();
-    }, 5000);
+    }, 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -61,12 +63,17 @@ const CategorySlider = () => {
       (prev) => (prev - 1 + categories.length) % categories.length
     );
 
+  // Navigate to categories page on click
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(`/category?name=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
     <div className="relative w-full h-72 md:h-[28rem] overflow-hidden rounded-2xl shadow-xl mb-10 group">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={categories[currentIndex].id}
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full cursor-pointer"
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -77,6 +84,7 @@ const CategorySlider = () => {
             if (info.offset.x > 100) goToPrev();
             else if (info.offset.x < -100) goToNext();
           }}
+          onClick={() => handleCategoryClick(categories[currentIndex].name)}
         >
           <img
             src={categories[currentIndex].image}
@@ -112,18 +120,18 @@ const CategorySlider = () => {
         ))}
       </div>
 
-      {/* Arrow buttons (hidden until hover on desktop) */}
+      {/* Arrow buttons */}
       <button
         onClick={goToPrev}
         className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
       >
-        ◀
+        prev
       </button>
       <button
         onClick={goToNext}
         className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
       >
-        ▶
+        next
       </button>
     </div>
   );

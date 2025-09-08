@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface Meme {
   id: number;
@@ -11,6 +12,8 @@ interface Meme {
   username: string;
   likes_count: number;
 }
+
+const API_BASE = "http://localhost:5000"; // backend base URL
 
 const categories = [
   "Historical Events",
@@ -25,77 +28,55 @@ const categories = [
   "Animals",
 ];
 
-const memes: Meme[] = [
-  {
-    id: 1,
-    title: "Apollo Mission",
-    description: "When Neil Armstrong said the line...",
-    file_path: "https://media.giphy.com/media/26tknCqiJrBQG6bxC/giphy.gif",
-    file_type: "gif",
-    category: "Historical Events",
-    username: "historybuff",
-    likes_count: 98,
-  },
-  {
-    id: 2,
-    title: "Coding Victory",
-    description: "When your code finally compiles",
-    file_path: "https://media.giphy.com/media/QuIxFwQo0RMT1tASlV/giphy.gif",
-    file_type: "gif",
-    category: "Science & Technology",
-    username: "techie",
-    likes_count: 150,
-  },
-  {
-    id: 3,
-    title: "Pizza Time",
-    description: "When the pizza delivery guy is here!",
-    file_path: "https://media.giphy.com/media/Ae7SI3LoPYj8Q/giphy.gif",
-    file_type: "gif",
-    category: "Food & Cooking",
-    username: "foodie",
-    likes_count: 200,
-  },
-  {
-    id: 4,
-    title: "Workout Mood",
-    description: "First day at the gym be like...",
-    file_path: "https://media.giphy.com/media/PKcEXtIUzLxYI/giphy.gif",
-    file_type: "gif",
-    category: "Gym & Fitness",
-    username: "fitlife",
-    likes_count: 120,
-  },
-  {
-    id: 5,
-    title: "90s Kids",
-    description: "Only real 90s kids will remember this!",
-    file_path: "https://media.giphy.com/media/3oKHWrD5CQu7qGShxu/giphy.gif",
-    file_type: "gif",
-    category: "Nostalgia (90s/2000s kids)",
-    username: "retroKid",
-    likes_count: 340,
-  },
-];
-
 const Categories = () => {
-  const location = useLocation(); // ✅ inside component
+  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const defaultCategory = queryParams.get("name") || "All";
 
-  const [selectedCategory, setSelectedCategory] =
-    useState<string>(defaultCategory);
+  const [selectedCategory, setSelectedCategory] = useState<string>(defaultCategory);
+  const [memes, setMemes] = useState<Meme[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredMemes =
-    selectedCategory === "All"
-      ? memes
-      : memes.filter((meme) => meme.category === selectedCategory);
+  // Fetch memes from backend
+  const fetchMemes = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/memes`, {
+        credentials: "include",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch memes");
+      }
+
+      const data: Meme[] = await response.json();
+
+      // Filter client-side for selected category
+      const filtered = selectedCategory === "All"
+        ? data
+        : data.filter((m) => m.category === selectedCategory);
+
+      setMemes(filtered);
+    } catch (err) {
+      console.error("Failed to fetch memes:", err);
+      setMemes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMemes();
+  }, [selectedCategory]);
 
   return (
     <div className="p-6 md:p-10 space-y-8">
       <h1 className="text-4xl font-extrabold text-gray-800">Categories</h1>
 
-      {/* Categories list */}
+      {/* Category Buttons */}
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => setSelectedCategory("All")}
@@ -122,41 +103,45 @@ const Categories = () => {
         ))}
       </div>
 
-      {/* Meme grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredMemes.length > 0 ? (
-          filteredMemes.map((meme) => (
-            <div
+      {/* Meme Grid */}
+      {loading ? (
+        <p className="text-center text-gray-500 mt-10">Loading memes...</p>
+      ) : memes.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {memes.map((meme) => (
+            <motion.div
               key={meme.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition"
+              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
+              whileHover={{ scale: 1.03 }}
             >
-              {meme.file_type === "gif" || meme.file_type === "image" ? (
-                <img
-                  src={meme.file_path}
-                  alt={meme.title}
+              {meme.file_type === "video" ? (
+                <video
+                  controls
+                  src={`${API_BASE}${meme.file_path}`}
                   className="w-full h-64 object-cover"
                 />
               ) : (
-                <video
-                  controls
-                  src={meme.file_path}
+                <img
+                  src={`${API_BASE}${meme.file_path}`}
+                  alt={meme.title}
                   className="w-full h-64 object-cover"
                 />
               )}
+
               <div className="p-4 space-y-2">
                 <h2 className="text-xl font-bold">{meme.title}</h2>
-                <p className="text-gray-600 text-sm">{meme.description}</p>
+                <p className="text-gray-600 text-sm line-clamp-2">{meme.description}</p>
                 <div className="flex justify-between text-sm text-gray-500">
-                  <span>👤 {meme.username}</span>
+                  <span>👤 {meme.username || "Anonymous"}</span>
                   <span>❤️ {meme.likes_count}</span>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No memes available for this category.</p>
-        )}
-      </div>
+            </motion.div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 mt-10 text-center">No memes available for this category.</p>
+      )}
     </div>
   );
 };

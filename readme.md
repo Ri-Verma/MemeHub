@@ -19,7 +19,7 @@ MemeHub is a **full-stack meme sharing platform** where users can upload, explor
 ## ⚡ Getting Started
 1. Clone repo:
    ```bash
-   git clone https://github.com/yourusername/memehub.git
+   https://github.com/Ri-Verma/MemeHub.git
    ```
 2. Setup backend:
    ```bash

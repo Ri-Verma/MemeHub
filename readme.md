@@ -1,21 +1,54 @@
-# MemeHub
+# MemeHub 🎭
 
-MemeHub is a web application for sharing, browsing, and uploading memes. It is being developed using **React** and **Next.js**, with both the frontend and backend integrated in a single project. The project is currently a work in progress.
+MemeHub is a **full-stack meme sharing platform** where users can upload, explore, like, follow, and share memes. Built with a modern UI, backend API, and MySQL database.
 
-## Features (In Progress)
-- Browse memes uploaded by users
-- Upload your own memes
-- User authentication (Login/Signup)
-- Profile pages for users
-- Responsive design for desktop and mobile
+## ✨ Features
+- User signup & login  
+- Profile with bio, stats, and profile pic  
+- Followers & following system  
+- Upload memes (images, videos, gifs)  
+- Like, bookmark, and share memes  
+- Explore page with search & filters  
+- Categories with vertical slider  
+- Modern responsive UI  
 
-## Tech Stack
-- **Frontend & Backend:** React + Next.js
-- **Styling:** Tailwind CSS
-- **Database:** TBD (planned)
-- **API:** Next.js API routes
+## 🛠 Tech Stack
+**Frontend:** React + Vite, Tailwind CSS, Framer Motion  
+**Backend:** Node.js + Express, MySQL  
 
-## Installation
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/memehub.git
+## ⚡ Getting Started
+1. Clone repo:
+   ```bash
+   git clone https://github.com/yourusername/memehub.git
+   ```
+2. Setup backend:
+   ```bash
+   cd backend && npm install && npm run dev
+   ```
+3. Setup frontend:
+   ```bash
+   cd frontend && npm install && npm run dev
+   ```
+
+# 🌐 API Endpoints
+## User
+- POST /api/users/signup – Register user
+- POST /api/users/login – Login user
+- GET /api/users/:id – Get user profile
+- POST /api/users/:id/follow – Follow a user
+- DELETE /api/users/:id/unfollow – Unfollow a user
+
+## Memes
+- GET /api/memes – Get all memes
+- POST /api/memes – Upload meme
+- GET /api/memes/:id – Get meme by ID
+- DELETE /api/memes/:id – Delete meme
+
+## 🚀 Future Improvements
+- Dark mode  
+- Infinite scroll  
+- Notifications  
+- Comments on memes  
+
+---
+Built with passion by Rishikesh

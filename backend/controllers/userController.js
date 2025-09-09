@@ -110,3 +110,25 @@ exports.getUserById = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching user', error: error.message });
     }
 };
+
+
+exports.getFollowers = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const followers = await User.getFollowers(userId);
+        res.json({ success: true, followers });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error fetching followers', error: error.message });
+    }
+};
+
+exports.getFollowing = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const following = await User.getFollowing(userId);
+        res.json({ success: true, following });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Error fetching following', error: error.message });
+    }
+};
+

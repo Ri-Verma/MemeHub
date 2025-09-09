@@ -10,7 +10,7 @@ import Explore from './pages/explore';
 function App() {
   return (
     <Router>
-      <div className="App">
+      <div className="bg-blue-900 min-h-screen">
         {/* Always visible */}
         <Header />
 

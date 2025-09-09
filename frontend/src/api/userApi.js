@@ -102,3 +102,26 @@ export const unfollowUser = async (userId) => {
     return { success: false, message: "Failed to unfollow user" };
   }
 };
+
+
+export const getFollowers = async (userId) => {
+  try {
+    const res = await API.get(`/${userId}/followers`);
+    return res.data;
+  } catch {
+    return { success: false, message: "Failed to fetch followers" };
+  }
+};
+
+export const getFollowing = async (userId) => {
+  try {
+    const token = localStorage.getItem("auth_token");
+    const res = await API.get(`/${userId}/following`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    return { success: false, message: "Failed to fetch following" };
+  }
+};
+

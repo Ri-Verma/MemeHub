@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
+import { ChevronLast, ChevronFirst } from "lucide-react";
 interface Category {
   id: number;
   name: string;
@@ -51,7 +51,7 @@ const CategorySlider = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       goToNext();
-    }, 2000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -125,13 +125,14 @@ const CategorySlider = () => {
         onClick={goToPrev}
         className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
       >
-        prev
+        <ChevronFirst />
+        
       </button>
       <button
         onClick={goToNext}
         className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
       >
-        next
+        <ChevronLast />
       </button>
     </div>
   );

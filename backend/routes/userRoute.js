@@ -15,4 +15,9 @@ router.get('/:userId', userController.getUserById);
 router.post('/follow/:userId', authMiddleware, userController.followUser);
 router.delete('/unfollow/:userId', authMiddleware, userController.unfollowUser);
 
+
+router.get('/:userId/followers', userController.getFollowers);
+router.get('/:userId/following', userController.getFollowing);
+
+
 module.exports = router;

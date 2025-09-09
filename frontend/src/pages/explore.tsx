@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { getAllMemes } from "../api/memeApi"; // Your backend API call
+import { getAllMemes } from "../api/memeApi";
+import { followUser, unfollowUser, getFollowing } from "../api/userApi"; // ✅ imports
 import { Link } from "react-router-dom";
 
-const API_BASE = "http://localhost:5000"; // Backend URL
+const API_BASE = "http://localhost:5000";
 
 interface Meme {
   id: number;
+  user_id: number; // ✅ uploader's id
   title: string;
   description: string;
   file_path: string;
@@ -26,6 +28,10 @@ const Explore = () => {
   const [selectedType, setSelectedType] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  // ✅ store followed user ids
+  const [following, setFollowing] = useState<number[]>([]);
+
+  // fetch all memes
   useEffect(() => {
     const fetchMemes = async () => {
       setLoading(true);
@@ -42,7 +48,44 @@ const Explore = () => {
     fetchMemes();
   }, []);
 
-  // Filter memes whenever category, type, or search changes
+  // fetch following list from backend
+  useEffect(() => {
+    const fetchFollowing = async () => {
+      const user = JSON.parse(localStorage.getItem("meme_user") || "null");
+      if (!user) return;
+
+      try {
+        const res = await getFollowing(user.id);
+        if (res.success) {
+          setFollowing(res.following.map((u: any) => u.id)); // store user_ids
+        }
+      } catch (err) {
+        console.error("Failed to fetch following:", err);
+      }
+    };
+    fetchFollowing();
+  }, []);
+
+  // ✅ handle follow/unfollow toggle
+  const handleFollowToggle = async (userId: number) => {
+    try {
+      if (following.includes(userId)) {
+        const res = await unfollowUser(userId);
+        if (res.success) {
+          setFollowing((prev) => prev.filter((id) => id !== userId));
+        }
+      } else {
+        const res = await followUser(userId);
+        if (res.success) {
+          setFollowing((prev) => [...prev, userId]);
+        }
+      }
+    } catch (err) {
+      console.error("Follow toggle error:", err);
+    }
+  };
+
+  // filter memes
   useEffect(() => {
     let temp = [...memes];
     if (selectedCategory !== "All") {
@@ -64,12 +107,10 @@ const Explore = () => {
 
   return (
     <div className="p-6 md:p-10 space-y-8">
-      <h1 className="text-4xl font-extrabold text-gray-800 mb-6">Explore Memes</h1>
+      <h1 className="text-4xl font-extrabold bg-gradient-to-r from-yellow-400 via-yellow-500 to-indigo-600 bg-clip-text text-transparent mb-6">Explore Memes</h1>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-6 items-center">
-        
-
         {/* Type filter */}
         <div className="flex flex-wrap gap-2">
           {fileTypes.map((type) => (
@@ -93,7 +134,7 @@ const Explore = () => {
           placeholder="Search by title or username..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="ml-auto px-4 py-2 border rounded-xl focus:ring-2 focus:ring-purple-500 focus:outline-none w-full md:w-72 transition"
+          className="ml-auto px-4 py-2 border rounded-xl text-amber-50 focus:ring-2 focus:ring-purple-500 focus:outline-none w-full md:w-72 transition"
         />
       </div>
 
@@ -127,15 +168,26 @@ const Explore = () => {
                 <p className="text-gray-600 text-sm line-clamp-2">{meme.description}</p>
                 <div className="flex justify-between items-center text-sm text-gray-500">
                   <span>👤 {meme.username || "Anonymous"}</span>
-                  <span>❤️ {meme.likes_count}</span>
+                  {/* <span>❤️ {meme.likes_count}</span> */}
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 flex justify-between items-center">
                   <Link
                     to={`/categories?name=${encodeURIComponent(meme.category)}`}
                     className="text-purple-600 hover:underline text-sm font-medium"
                   >
                     📂 {meme.category}
                   </Link>
+                  {/* ✅ Follow button */}
+                  <button
+                    onClick={() => handleFollowToggle(meme.user_id)}
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                      following.includes(meme.user_id)
+                        ? "bg-red-500 text-white hover:bg-red-600"
+                        : "bg-green-500 text-white hover:bg-green-600"
+                    }`}
+                  >
+                    {following.includes(meme.user_id) ? "Unfollow" : "Follow"}
+                  </button>
                 </div>
               </div>
             </motion.div>

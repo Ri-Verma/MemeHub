@@ -26,6 +26,8 @@ const categories = [
   "Pop Culture & Entertainment",
   "Video Games",
   "Animals",
+  "Cartoons & Animation",
+  "Dark Humor",
 ];
 
 const Categories = () => {
@@ -74,7 +76,7 @@ const Categories = () => {
 
   return (
     <div className="p-6 md:p-10 space-y-8">
-      <h1 className="text-4xl font-extrabold text-gray-800">Categories</h1>
+      <h1 className="text-4xl font-extrabold text-cyan-400">Categories</h1>
 
       {/* Category Buttons */}
       <div className="flex flex-wrap gap-3">
@@ -133,7 +135,7 @@ const Categories = () => {
                 <p className="text-gray-600 text-sm line-clamp-2">{meme.description}</p>
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>👤 {meme.username || "Anonymous"}</span>
-                  <span>❤️ {meme.likes_count}</span>
+                  {/* <span>❤️ {meme.likes_count}</span> */}
                 </div>
               </div>
             </motion.div>

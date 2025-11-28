@@ -21,10 +21,14 @@ MemeHub is a **full-stack meme sharing platform** where users can upload, explor
    ```bash
    https://github.com/Ri-Verma/MemeHub.git
    ```
+
+   
 2. Setup backend:
    ```bash
    cd backend && npm install && npm run dev
    ```
+
+   
 3. Setup frontend:
    ```bash
    cd frontend && npm install && npm run dev

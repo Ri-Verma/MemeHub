@@ -21,11 +21,20 @@ MemeHub is a **full-stack meme sharing platform** where users can upload, explor
    ```bash
    https://github.com/Ri-Verma/MemeHub.git
    ```
-
+After Cloning the repo configure the .env file in the backend folder below is the structure of the file
+(
+DB_HOST=localhost(locally runniing)
+DB_USER=someuser
+DB_PASSWORD=somepassword
+DB_NAME=somedatabasename
+JWT_SECRET=random_secret_key
+EXPIRATION_TIME=anytime(1D = 1 Day)
+PORT=should_be_the_database_port
+)
    
 2. Setup backend:
    ```bash
-   cd backend && npm install && npm run dev
+   cd backend && npm install && npm run dev (or node server.js)
    ```
 
    
@@ -47,12 +56,17 @@ MemeHub is a **full-stack meme sharing platform** where users can upload, explor
 - POST /api/memes – Upload meme
 - GET /api/memes/:id – Get meme by ID
 - DELETE /api/memes/:id – Delete meme
+## 📸 Screenshots
 
-## 🚀 Future Improvements
-- Dark mode  
-- Infinite scroll  
-- Notifications  
-- Comments on memes  
+| Login | Profile |
+|-------|---------|
+| ![Login Screen](./screenshots/user1.png) | ![User Profile](./screenshots/user2.png) |
+
+| Upload Meme | Explore Page |
+|-------------|--------------|
+| ![Upload Screen](./screenshots/upload.png) | ![Explore Screen](./screenshots/explore.png) |
+
+
 
 ---
 Built with passion by Rishikesh

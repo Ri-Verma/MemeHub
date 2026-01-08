@@ -137,7 +137,7 @@ exports.getAllMemes = async (req, res) => {
   }
 };
 
-// 📌 Get meme by ID
+//  Get meme by ID
 exports.getMemeById = async (req, res) => {
   try {
     const { memeId } = req.params;

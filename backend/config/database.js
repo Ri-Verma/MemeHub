@@ -8,7 +8,7 @@ const initialConnection = mysql.createConnection({
     password: process.env.DB_PASSWORD
 });
 
-// Create database if it doesn't exist
+// Create database if it doesn't exist (demo)
 initialConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\``, (err) => {
     if (err) {
         console.error('Error creating database:', err);

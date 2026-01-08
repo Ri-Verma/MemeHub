@@ -21,16 +21,15 @@ MemeHub is a **full-stack meme sharing platform** where users can upload, explor
    ```bash
    https://github.com/Ri-Verma/MemeHub.git
    ```
-After Cloning the repo configure the .env file in the backend folder below is the structure of the file
-(
-DB_HOST=localhost(locally runniing)
-DB_USER=someuser
-DB_PASSWORD=somepassword
-DB_NAME=somedatabasename
-JWT_SECRET=random_secret_key
-EXPIRATION_TIME=anytime(1D = 1 Day)
-PORT=should_be_the_database_port
-)
+- After Cloning the repo configure the .env file in the backend folder below is the structure of the file
+
+- DB_HOST=localhost(locally runniing)
+- DB_USER=someuser
+- DB_PASSWORD=somepassword
+- DB_NAME=somedatabasename
+- JWT_SECRET=random_secret_key
+- EXPIRATION_TIME=anytime(1D = 1 Day)
+- PORT=should_be_the_database_port
    
 2. Setup backend:
    ```bash
@@ -69,4 +68,8 @@ PORT=should_be_the_database_port
 
 
 ---
+### NOTE : (dependicies are depriciated so deploment is not possible for now)
+
 Built with passion by Rishikesh
+
+

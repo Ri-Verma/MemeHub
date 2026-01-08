@@ -21,7 +21,7 @@ MemeHub is a **full-stack meme sharing platform** where users can upload, explor
    ```bash
    https://github.com/Ri-Verma/MemeHub.git
    ```
-- After Cloning the repo configure the .env file in the backend folder below is the structure of the file
+### After Cloning the repo configure the .env file in the backend folder below is the structure of the file
 
 - DB_HOST=localhost(locally runniing)
 - DB_USER=someuser
